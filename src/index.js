@@ -16,32 +16,31 @@ class App extends React.Component {
     };
   }
   componentDidMount() {
-    let currentComponent = this;  
-    this.state.data.map(function(charity){
+    this.state.data.map((charity) => {
       axios.get(`https://api.justgiving.com/2e449b72/v1/charity/`+charity.id+`/donations`, { headers : { Accept: 'application/json' } })      
-      .then(res => {
-        const charityDonation = () => {
-          return {
-            charity: charity.name,
+      .then((res) => {
+        var newCharityDonation = {
+            name: charity.name,
             id: charity.id,
             donationAmount: res.data.donations[0].amount
-          };
         };
-        console.log(charityDonation)
-        currentComponent.setState({ charityDonation });
+        this.setState({ 
+          charityDonation: this.state.charityDonation.concat([newCharityDonation])
+        })
       });
     });
   }
   render() {
+    console.log(this.state.charityDonation)
     const { charityDonation } = this.state;
     return (
       <div>
         <ReactTable
-          charityDonation={charityDonation}
+          data={charityDonation}
           columns={[
                 {
                   Header: "Charity",
-                  accessor: "charity"
+                  accessor: "name"
                 },
                 {
                   Header: "id",
@@ -49,8 +48,7 @@ class App extends React.Component {
                 },
                 {
                  Header: "Donation Amount",
-                 id: "donationAmount",
-                 accessor: d => d.donationAmount
+                 accessor: "donationAmount"
                 }
           ]}
         />
