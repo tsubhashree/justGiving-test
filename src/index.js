@@ -22,7 +22,7 @@ class App extends React.Component {
         var newCharityDonation = {
             name: charity.name,
             id: charity.id,
-            donationAmount: res.data.donations[0].amount
+            donationAmount: res.data.donations.filter(donation => donation.amount != null)[0].amount
         };
         this.setState({ 
           charityDonation: this.state.charityDonation.concat([newCharityDonation])
